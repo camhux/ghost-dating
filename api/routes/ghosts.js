@@ -36,3 +36,11 @@ ghostRouter.put('/:id', function (req, res) {
 
   res.json(updatedGhost)
 });
+
+ghostRouter.delete('/:id', function (req, res) {
+  if(!db.delete(req.params.id)) {
+    return res.status(404).json({error: 'ghost not found'});
+  }
+
+  return res.json({ok: true});
+});

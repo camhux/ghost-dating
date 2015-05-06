@@ -23,5 +23,14 @@ module.exports = {
 
     db.ghosts[id] = data;
     return db.ghosts[id];
+  },
+
+  delete: function(id) {
+    if (!db.ghosts[id]) {
+      return false;
+    }
+
+    db.ghosts[id] = null;
+    return true;
   }
 };
