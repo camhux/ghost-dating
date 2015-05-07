@@ -8,6 +8,15 @@ module.exports = ghostRouter = express.Router();
 
 ghostRouter.use(bodyParser.json({extended: true}));
 
+ghostRouter.get('/', function (req, res) {
+  var ghosts = db.getAll();
+  if (!ghosts) {
+    return res.status(404).json({error: 'no ghosts in database...'});
+  }
+
+  res.json(ghosts);
+});
+
 ghostRouter.get('/:id', function (req, res) {
   var ghost = db.get(req.params.id);
   if(!ghost) {

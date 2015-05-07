@@ -5,6 +5,10 @@ module.exports = {
     return db.ghosts[id] || false;
   },
 
+  getAll: function() {
+    return db.ghosts;
+  },
+
   save: function(data) {
     if (Object.keys(data).length > 0) {
       console.log(data);
