@@ -3,22 +3,19 @@
 <head>
 	<title>ghost singles</title>
 	<style>
-	button {
-		margin-left: auto;
-		margin-right: auto;
-	    margin-top: 30px;
-        display: block;
-	}
 	</style>
 </head>
 
 <body>
 
+<button id="create-ghost">Add a new ghost profile</button><br>
 <ul class="list-container" id="list">
 </ul>
 
 <div id="open-pane">
 </div>
+
+
 
 <script type="text/template" id="list-item-tpl">
     <%= name %>, age <%= age %>
@@ -28,7 +25,15 @@
     <strong><%= name %></strong>, age <%= age %><br>
     <img src=<%= image %>>
     <p>Chat with <%= name %> today...<p><br>
-    <button>Message <%= name %></button>
+    <button class="message">Message <%= name %></button>
+</script>
+
+<script type="text/template" id="create-tpl">
+    <form id="profile-form">
+    <label>Name: <input type="text" name="name" autocomplete="off"></label><br>
+    <label>Age: <input type="text" name="age" autocomplete="off"><label><br>
+    <input type="submit" value="Create profile">
+    </form>
 </script>
 
 

@@ -4,12 +4,17 @@ var Ghost = Backbone.Model.extend({
 
   defaults: {
     name: '',
-    age: 0
+    age: 0,
+    image: 'https://placekitten.com/g/200/400'
   },
 
   validate: function validate(attrs, options) {
     if (!attrs.name) {
       return 'You must pick a name to represent yourself here, even if you are ancient and innominate';
+    }
+
+    if (isNaN(attrs.age)) {
+      return 'Age must be a number';
     }
   }
 
@@ -63,6 +68,12 @@ var ghostCollection = new Backbone.Collection({
   model: Ghost
 });
 
+ghostCollection.on('add', function(ghost) {
+  ghost.save();
+  var view = views.list[ghost.cid] = new GhostListView({model: ghost});
+  view.render();
+});
+
 ghostCollection.url = '/ghosts';
 
 ghostCollection.fetch({reset: true})
@@ -72,3 +83,30 @@ ghostCollection.fetch({reset: true})
       view.render();
     });
   });
+
+var $addButton = $('#create-ghost');
+var $profileForm;
+
+$addButton.click(function(event) {
+  var newGhost = new Ghost();
+
+  $('#open-pane').html($('#create-tpl').html());
+  $profileForm = $('#profile-form');
+
+  $profileForm.submit(function(event) {
+    event.preventDefault();
+    newGhost.set({
+      name: $profileForm.find('[name="name"]').val(),
+     age: parseInt($profileForm.find('[name="age"]').val(), 10)
+   });
+    console.log(newGhost);
+    if (!newGhost.isValid()) {
+      alert(newGhost.validationError);
+      newGhost.clear();
+    } else {
+      ghostCollection.add(newGhost);
+      $('#open-pane').empty();
+    }
+  });
+});
+
