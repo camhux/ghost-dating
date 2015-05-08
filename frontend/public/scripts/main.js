@@ -1,4 +1,4 @@
-var views = {};
+var views = {list: {}, panes: {}};
 
 var Ghost = Backbone.Model.extend({
 
@@ -34,8 +34,11 @@ var GhostListView = Backbone.View.extend({
   },
 
   open: function(e) {
-    var newOpenView = new GhostOpenView({model: this.model});
-    newOpenView.render();
+    var openView;
+    if (!views.panes[this.model.cid]) {
+      openView = views.panes[this.model.cid] = new GhostOpenView({model: this.model});
+    } else openView = views.panes[this.model.cid];
+    openView.render();
   }
 
 });
@@ -65,7 +68,7 @@ ghostCollection.url = '/ghosts';
 ghostCollection.fetch({reset: true})
   .done(function() {
     ghostCollection.forEach(function(ghost) {
-      var view = views[ghost.cid] = new GhostListView({model: ghost});
+      var view = views.list[ghost.cid] = new GhostListView({model: ghost});
       view.render();
     });
   });
