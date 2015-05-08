@@ -19,6 +19,7 @@ var Ghost = Backbone.Model.extend({
 var GhostListView = Backbone.View.extend({
 
   tagName: 'li',
+  className: 'ghostEntry',
 
   template: _.template($('#list-item-tpl').html()),
 
@@ -42,13 +43,14 @@ var GhostListView = Backbone.View.extend({
 
 var GhostOpenView = Backbone.View.extend({
 
-  el: '#open-pane',
+  tagName: 'div',
+  className: 'ghostOpen',
 
   template: _.template($('#open-tpl').html()),
 
   render: function() {
     this.$el.html(this.template(this.model.attributes));
-
+    $('#open-pane').html(this.el);
     return this;
   }
 
@@ -60,10 +62,10 @@ var ghostCollection = new Backbone.Collection({
 
 ghostCollection.url = '/ghosts';
 
-ghostCollection.fetch();
-
-console.log(ghostCollection.models);
-
-ghostCollection.each(function(model) {
-  var view = views[model.cid] = new GhostListView({model: model});
-});
+ghostCollection.fetch({reset: true})
+  .done(function() {
+    ghostCollection.forEach(function(ghost) {
+      var view = views[ghost.cid] = new GhostListView({model: ghost});
+      view.render();
+    });
+  });
