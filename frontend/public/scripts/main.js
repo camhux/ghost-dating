@@ -20,6 +20,17 @@ var Ghost = Backbone.Model.extend({
 
 });
 
+var ghostCollection = new Backbone.Collection({
+  model: Ghost
+});
+
+ghostCollection.on('add', function(ghost) {
+  ghost.save();
+  var view = views.list[ghost.cid] = new GhostListView({model: ghost});
+  view.render();
+});
+
+ghostCollection.url = '/ghosts';
 
 var GhostListView = Backbone.View.extend({
 
@@ -35,7 +46,11 @@ var GhostListView = Backbone.View.extend({
   },
 
   events: {
-    click: 'open'
+    'click' : 'triggerRoute'
+  },
+
+  triggerRoute: function() {
+    ghostRouter.navigate(this.model.cid, {trigger: true});
   },
 
   open: function(e) {
@@ -64,30 +79,40 @@ var GhostOpenView = Backbone.View.extend({
 
 });
 
-var ghostCollection = new Backbone.Collection({
-  model: Ghost
+var GhostRouter = Backbone.Router.extend({
+
+  routes: {
+    '' : 'index',
+    ':cid' : 'openProfile'
+  },
+
+  index: function() {
+    $('#open-pane').empty();
+  },
+
+  openProfile: function(cid) {
+    views.list[cid].open();
+  }
+
 });
 
-ghostCollection.on('add', function(ghost) {
-  ghost.save();
-  var view = views.list[ghost.cid] = new GhostListView({model: ghost});
-  view.render();
-});
-
-ghostCollection.url = '/ghosts';
+var ghostRouter;
 
 ghostCollection.fetch({reset: true})
-  .done(function() {
+  .then(function() {
     ghostCollection.forEach(function(ghost) {
       var view = views.list[ghost.cid] = new GhostListView({model: ghost});
       view.render();
     });
+    ghostRouter = new GhostRouter();
+    Backbone.history.start();
   });
 
 var $addButton = $('#create-ghost');
 var $profileForm;
 
-$addButton.click(function(event) {
+$addButton.click(function clickHandler(event) {
+  ghostRouter.navigate('create');
   var newGhost = new Ghost();
 
   $('#open-pane').html($('#create-tpl').html());
@@ -97,7 +122,7 @@ $addButton.click(function(event) {
     event.preventDefault();
     newGhost.set({
       name: $profileForm.find('[name="name"]').val(),
-     age: parseInt($profileForm.find('[name="age"]').val(), 10)
+      age: +($profileForm.find('[name="age"]').val())
    });
     console.log(newGhost);
     if (!newGhost.isValid()) {
@@ -105,8 +130,7 @@ $addButton.click(function(event) {
       newGhost.clear();
     } else {
       ghostCollection.add(newGhost);
-      $('#open-pane').empty();
+      ghostRouter.navigate('');
     }
   });
 });
-
