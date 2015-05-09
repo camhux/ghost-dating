@@ -1,99 +1,11 @@
 var views = {list: {}, panes: {}};
 
-var Ghost = Backbone.Model.extend({
-
-  defaults: {
-    name: '',
-    age: 0,
-    image: 'https://placekitten.com/g/200/400'
-  },
-
-  validate: function validate(attrs, options) {
-    if (!attrs.name) {
-      return 'You must pick a name to represent yourself here, even if you are ancient and innominate';
-    }
-
-    if (isNaN(attrs.age)) {
-      return 'Age must be a number';
-    }
-  }
-
-});
-
-var ghostCollection = new Backbone.Collection({
-  model: Ghost
-});
+var ghostCollection = new GhostCollection();
 
 ghostCollection.on('add', function(ghost) {
   ghost.save();
   var view = views.list[ghost.cid] = new GhostListView({model: ghost});
   view.render();
-});
-
-ghostCollection.url = '/ghosts';
-
-var GhostListView = Backbone.View.extend({
-
-  tagName: 'li',
-  className: 'ghostEntry',
-
-  template: _.template($('#list-item-tpl').html()),
-
-  render: function() {
-    this.$el.html(this.template(this.model.attributes));
-    $('#list').append(this.el);
-    return this;
-  },
-
-  events: {
-    'click' : 'triggerRoute'
-  },
-
-  triggerRoute: function() {
-    ghostRouter.navigate(this.model.cid, {trigger: true});
-  },
-
-  open: function(e) {
-    var openView;
-    if (!views.panes[this.model.cid]) {
-      openView = views.panes[this.model.cid] = new GhostOpenView({model: this.model});
-    } else openView = views.panes[this.model.cid];
-    openView.render();
-  }
-
-});
-
-
-var GhostOpenView = Backbone.View.extend({
-
-  tagName: 'div',
-  className: 'ghostOpen',
-
-  template: _.template($('#open-tpl').html()),
-
-  render: function() {
-    this.$el.html(this.template(this.model.attributes));
-    $('#open-pane').html(this.el);
-    return this;
-  }
-
-});
-
-var GhostRouter = Backbone.Router.extend({
-
-  routes: {
-    '' : 'index',
-    ':cid' : 'openProfile'
-  },
-
-  index: function() {
-    $('#open-pane').empty();
-  },
-
-  openProfile: function(cid) {
-    views.list[cid].open();
-  }
-
 });
 
 var ghostRouter;
