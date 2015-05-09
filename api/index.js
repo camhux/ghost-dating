@@ -4,7 +4,7 @@ var app = express();
 var port = process.env.PORT || 8000;
 
 
-app.use('/public', express.static(__dirname + '/../frontend/public'));
+app.use(express.static(__dirname + '/../frontend/public'));
 app.use('/ghosts', require('./routes/ghosts'));
 
 app.listen(port, function () {
