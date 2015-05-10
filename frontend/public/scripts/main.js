@@ -8,6 +8,7 @@ ghostCollection.on('add', function(ghost) {
   ghost.save();
   var view = views.list[ghost.cid] = new GhostListView({model: ghost});
   view.render();
+  $listEl.append(view.el);
 });
 
 var ghostRouter;
@@ -18,6 +19,7 @@ ghostCollection.fetch({reset: true})
     ghostCollection.forEach(function(ghost) {
       var view = views.list[ghost.cid] = new GhostListView({model: ghost});
       view.render();
+      $listEl.append(view.el);
     });
 
     ghostRouter = new GhostRouter();
