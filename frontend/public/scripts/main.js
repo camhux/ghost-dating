@@ -9,6 +9,9 @@ ghostCollection.on('add', function(ghost) {
   var view = views.list[ghost.cid] = new GhostListView({model: ghost});
   view.render();
   $listEl.append(view.el);
+  ghostRouter.listenTo(view, 'open', function(data) {
+    this.navigate(data.cid);
+  });
 });
 
 var ghostRouter;
@@ -25,7 +28,7 @@ ghostCollection.fetch({reset: true})
     ghostRouter = new GhostRouter();
     _.each(views.list, function(view) {
       ghostRouter.listenTo(view, 'open', function(data) {
-        this.navigate(view.model.cid);
+        this.navigate(data.cid);
       });
     });
 
