@@ -22,6 +22,7 @@ var GhostListView = Backbone.View.extend({
       openView = views.panes[this.model.cid] = new GhostPaneView({model: this.model});
     } else openView = views.panes[this.model.cid];
     openView.render();
+    $paneEl.html(openView.el);
   }
 
 });

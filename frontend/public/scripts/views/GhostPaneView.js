@@ -7,7 +7,6 @@ var GhostPaneView = Backbone.View.extend({
 
   render: function() {
     this.$el.html(this.template(this.model.attributes));
-    $paneEl.html(this.el);
     return this;
   }
 
