@@ -12,14 +12,11 @@ var GhostListView = Backbone.View.extend({
   },
 
   events: {
-    'click' : 'triggerRoute'
-  },
-
-  triggerRoute: function() {
-    ghostRouter.navigate(this.model.cid, {trigger: true});
+    'click' : 'open'
   },
 
   open: function(e) {
+    this.trigger('open', {cid: this.model.cid});
     var openView;
     if (!views.panes[this.model.cid]) {
       openView = views.panes[this.model.cid] = new GhostPaneView({model: this.model});

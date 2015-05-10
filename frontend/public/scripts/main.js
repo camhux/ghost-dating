@@ -12,11 +12,19 @@ var ghostRouter;
 
 ghostCollection.fetch({reset: true})
   .then(function() {
+
     ghostCollection.forEach(function(ghost) {
       var view = views.list[ghost.cid] = new GhostListView({model: ghost});
       view.render();
     });
+
     ghostRouter = new GhostRouter();
+    _.each(views.list, function(view) {
+      ghostRouter.listenTo(view, 'open', function(data) {
+        this.navigate(view.model.cid);
+      });
+    });
+
     Backbone.history.start();
   });
 
