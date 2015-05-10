@@ -54,7 +54,7 @@ $addButton.click(function clickHandler(event) {
       newGhost.clear();
     } else {
       ghostCollection.add(newGhost);
-      ghostRouter.navigate('');
+      ghostRouter.navigate('', {trigger: true});
     }
   });
 });
