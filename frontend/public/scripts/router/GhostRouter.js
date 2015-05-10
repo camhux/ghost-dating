@@ -6,7 +6,7 @@ var GhostRouter = Backbone.Router.extend({
   },
 
   index: function() {
-    $('#open-pane').empty();
+    $paneEl.empty();
   },
 
   openProfile: function(cid) {

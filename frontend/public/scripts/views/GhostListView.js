@@ -7,7 +7,7 @@ var GhostListView = Backbone.View.extend({
 
   render: function() {
     this.$el.html(this.template(this.model.attributes));
-    $('#list').append(this.el);
+    $listEl.append(this.el);
     return this;
   },
 

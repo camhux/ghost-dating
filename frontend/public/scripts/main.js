@@ -1,4 +1,6 @@
 var views = {list: {}, panes: {}};
+var $listEl = $('#list');
+var $paneEl = $('#open-pane');
 
 var ghostCollection = new GhostCollection();
 
@@ -35,7 +37,7 @@ $addButton.click(function clickHandler(event) {
   ghostRouter.navigate('create');
   var newGhost = new Ghost();
 
-  $('#open-pane').html($('#create-tpl').html());
+  $paneEl.html($('#create-tpl').html());
   $profileForm = $('#profile-form');
 
   $profileForm.submit(function(event) {
